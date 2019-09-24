@@ -69,7 +69,7 @@ public class APIRequest<T>: Requestable, Validatable, Processable where T: Custo
     }
 }
 
-public class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
+open class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
     init(host: String,
          path: String,
          version: String,
