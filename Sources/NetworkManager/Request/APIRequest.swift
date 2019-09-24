@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
+open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
     let host: String
     let path: String
     let version: String
