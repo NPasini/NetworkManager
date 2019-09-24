@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ErrorType: Int, Error {
+public enum ErrorType: Int, Error {
     case missingData
     case parserError
     case unknownError
