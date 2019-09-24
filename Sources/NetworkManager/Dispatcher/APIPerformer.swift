@@ -23,7 +23,7 @@ private extension QualityOfService {
 }
 
 open class APIPerformer {
-    public let shared = APIPerformer()
+    public static let shared = APIPerformer()
     
     private let requestBuilder: APIRequestBuilder
     private var memorizedDispatchQueues: [QualityOfService: DispatchQueue]
