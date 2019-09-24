@@ -56,15 +56,15 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
         }
     }
     
-    public func validateResponse(_ response: URLResponse) -> NSError? {
+    open func validateResponse(_ response: URLResponse) -> NSError? {
         return nil
     }
     
-    public func validateResponseObject(_ object: T) -> NSError? {
+    open func validateResponseObject(_ object: T) -> NSError? {
         return nil
     }
     
-    public func processRequest(_ request: URLRequest) -> URLRequest {
+    open func processRequest(_ request: URLRequest) -> URLRequest {
         return request
     }
 }
