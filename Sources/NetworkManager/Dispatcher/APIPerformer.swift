@@ -23,11 +23,13 @@ private extension QualityOfService {
 }
 
 open class APIPerformer {
+    public let shared = APIPerformer()
+    
     private let requestBuilder: APIRequestBuilder
     private var memorizedDispatchQueues: [QualityOfService: DispatchQueue]
     private let requestPerformerFactory: APIRequestPerformerFactoryProtocol
     
-    public init() {
+    private init() {
         memorizedDispatchQueues = [:]
         requestBuilder = APIRequestBuilder()
         requestPerformerFactory = APIRequestPerformerFactory.shared
