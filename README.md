@@ -23,7 +23,7 @@ To integrate the package in your application you need to use Swift Package Manag
 
 First thing you have to do is to create the model parsing the response:
 
-```
+```swift
 struct YourResponse {
     let example: String
     
@@ -42,7 +42,7 @@ extension YourResponse: CustomDecodable {
 
 Then you have to create your request:
 
-```
+```swift
 class YourRequest: GetRequest<YourResponse> {
     init() {
         let host = "yourhost.com"
@@ -50,11 +50,12 @@ class YourRequest: GetRequest<YourResponse> {
         
         super.init(host: host, path: path)
     }
+}
 ```
 
 Finally you have to use the APIPerformer to connect to the endpoint:
 
-```
+```swift
 let subscriptionToEndpoint: SignalProducer<Result<YourResponse, NSError>> = SignalProducer {
             (observer, lifetime) in
             
