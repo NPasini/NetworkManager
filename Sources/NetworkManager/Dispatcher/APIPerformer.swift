@@ -46,9 +46,7 @@ public class APIPerformer {
         return newQueue
     }
     
-    private func connectTo<T: Decodable>(_ endpoint: APIRequest<T>,
-                                         QoS: QualityOfService,
-                                         completion: @escaping (Result<(Data, Int), NSError>) -> Void) -> APISubscriptionProtocol {
+    private func connectTo<T: Decodable>(_ endpoint: APIRequest<T>, QoS: QualityOfService, completion: @escaping (Result<(Data, Int), NSError>) -> Void) -> APISubscriptionProtocol {
         
         let item = DispatchWorkItem {
             guard let request: URLRequest = self.requestBuilder.requestFrom(endpoint) else {
@@ -102,10 +100,7 @@ public class APIPerformer {
         return DispatchWorkItemSubscription(item: item)
     }
     
-    private func performWrappedApi<T: CustomDecodable>(_ request: APIRequest<T>,
-                                               QoS: QualityOfService,
-                                               completionQueue: DispatchQueue,
-                                               completion: @escaping (Result<APIResponseWrapper<T>, NSError>) -> Void) -> APISubscriptionProtocol {
+    private func performWrappedApi<T: CustomDecodable>(_ request: APIRequest<T>, QoS: QualityOfService, completionQueue: DispatchQueue, completion: @escaping (Result<APIResponseWrapper<T>, NSError>) -> Void) -> APISubscriptionProtocol {
         return connectTo(request, QoS: QoS) { (result: Result<(Data, Int), NSError>) in
             switch result{
             case .success(let tuple):
@@ -138,10 +133,7 @@ public class APIPerformer {
         }
     }
     
-    public func performApi<T: CustomDecodable>(_ request: APIRequest<T>,
-                                        QoS: QualityOfService,
-                                        completionQueue: DispatchQueue = DispatchQueue.main,
-                                        completion: @escaping (Result<T, NSError>) -> Void) -> APISubscriptionProtocol {
+    public func performApi<T: CustomDecodable>(_ request: APIRequest<T>, QoS: QualityOfService, completionQueue: DispatchQueue = DispatchQueue.main, completion: @escaping (Result<T, NSError>) -> Void) -> APISubscriptionProtocol {
         
         return performWrappedApi(request, QoS: QoS, completionQueue: completionQueue) { (result: Result<APIResponseWrapper<T>, NSError>) in
             

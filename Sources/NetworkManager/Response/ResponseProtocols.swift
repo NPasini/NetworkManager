@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol CustomDecodable: Decodable {
+public protocol CustomDecodable: Decodable {
     static func decode(_ data: Data) -> CustomDecodable?
 }

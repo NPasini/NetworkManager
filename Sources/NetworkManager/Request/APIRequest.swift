@@ -7,7 +7,7 @@
 
 import Foundation
 
-class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
+public class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
     let host: String
     let path: String
     let version: String
@@ -56,20 +56,20 @@ class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecoda
         }
     }
     
-    func validateResponse(_ response: URLResponse) -> NSError? {
+    public func validateResponse(_ response: URLResponse) -> NSError? {
         return nil
     }
     
-    func validateResponseObject(_ object: T) -> NSError? {
+    public func validateResponseObject(_ object: T) -> NSError? {
         return nil
     }
     
-    func processRequest(_ request: URLRequest) -> URLRequest {
+    public func processRequest(_ request: URLRequest) -> URLRequest {
         return request
     }
 }
 
-class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
+public class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
     init(host: String,
          path: String,
          version: String,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol APISubscriptionProtocol {
+public protocol APISubscriptionProtocol {
     var isDisposed: Bool { get }
     func dispose()
 }
