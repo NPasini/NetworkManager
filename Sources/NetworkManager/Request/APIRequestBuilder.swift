@@ -7,9 +7,9 @@
 
 import Foundation
 
-class APIRequestBuilder: APIRequestBuilderProtocol {
-    func requestFrom(_ requestable: Requestable) -> URLRequest? {
-        
+internal class APIRequestBuilder: APIRequestBuilderProtocol {
+    //MARK: Internal Functions
+    internal func requestFrom(_ requestable: Requestable) -> URLRequest? {
         let urlString: String = "https://\(requestable.host)\(requestable.version)\(requestable.path)"
         
         guard let url: URL = URL(string: urlString) else {
@@ -28,6 +28,7 @@ class APIRequestBuilder: APIRequestBuilderProtocol {
         return request
     }
     
+    //MARK: Private Functions
     private func addHeaderParameters(from requestable: Requestable, to request: inout URLRequest) {
         if let headers = requestable.headerParameters {
             for (key, value) in headers {

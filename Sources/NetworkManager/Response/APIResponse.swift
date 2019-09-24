@@ -7,13 +7,13 @@
 
 import Foundation
 
-class APIResponse {
+internal class APIResponse {
     let data: Data?
     let statusCode: Int
     let request: URLRequest
     let response: URLResponse?
     
-    init(request: URLRequest, response: URLResponse?, data: Data?, statusCode: Int){
+    internal init(request: URLRequest, response: URLResponse?, data: Data?, statusCode: Int){
         self.data = data
         self.request = request
         self.response = response

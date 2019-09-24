@@ -7,22 +7,22 @@
 
 import Foundation
 
-typealias HTTPHeaders = [String: String]
-typealias HTTPBodyParameters = [String: Any]
-typealias HTTPQueryParameters = [String: CustomStringConvertible]
+public typealias HTTPHeaders = [String: String]
+public typealias HTTPBodyParameters = [String: Any]
+public typealias HTTPQueryParameters = [String: CustomStringConvertible]
 
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case get = "GET"
     case put = "PUT"
     case post = "POST"
     case delete = "DELETE"
 }
 
-enum ContentType: String {
+internal enum ContentType: String {
     case json = "application/json"
 }
 
-struct APIResponseWrapper<T> where T: CustomDecodable {
+internal struct APIResponseWrapper<T> where T: CustomDecodable {
     let object: T
     let statusCode: Int
 }

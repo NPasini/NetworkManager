@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Requestable {
+internal protocol Requestable {
     var body: Data? { get }
     var host: String { get }
     var path: String { get }
@@ -19,25 +19,25 @@ protocol Requestable {
     var queryParameters: HTTPQueryParameters? { get }
 }
 
-protocol Validatable {
+internal protocol Validatable {
     associatedtype Object
     
     func validateResponseObject(_ object: Object) -> NSError?
     func validateResponse(_ response: URLResponse) -> NSError?
 }
 
-protocol Processable {
+internal protocol Processable {
     func processRequest(_ urlRequest: URLRequest) -> URLRequest
 }
 
-protocol APIRequestBuilderProtocol {
+internal protocol APIRequestBuilderProtocol {
     func requestFrom(_ requestable: Requestable) -> URLRequest?
 }
 
-protocol APIRequestPerformerProtocol {
+internal protocol APIRequestPerformerProtocol {
     func performRequest(_ request: URLRequest, completion: @escaping (Result<APIResponse, NSError>) -> Void) -> APISubscriptionProtocol
 }
 
-protocol APIRequestPerformerFactoryProtocol {
+internal protocol APIRequestPerformerFactoryProtocol {
     func requestPerformerForQoS(_ QoS: QualityOfService) -> APIRequestPerformerProtocol
 }

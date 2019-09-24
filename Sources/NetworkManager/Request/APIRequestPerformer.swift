@@ -7,10 +7,10 @@
 
 import Foundation
 
-class APIRequestPerformer: NSObject, URLSessionDelegate, APIRequestPerformerProtocol {
+internal class APIRequestPerformer: NSObject, URLSessionDelegate, APIRequestPerformerProtocol {
     private var session: URLSession?
     
-    init(QoS: QualityOfService, timeoutForRequests: TimeInterval = 15) {
+    internal init(QoS: QualityOfService, timeoutForRequests: TimeInterval = 15) {
         let configuration: URLSessionConfiguration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = timeoutForRequests
         configuration.requestCachePolicy = .useProtocolCachePolicy
@@ -23,7 +23,7 @@ class APIRequestPerformer: NSObject, URLSessionDelegate, APIRequestPerformerProt
         self.session = URLSession(configuration: configuration, delegate: self, delegateQueue: delegateQueue)
     }
     
-    func performRequest(_ request: URLRequest, completion: @escaping (Result<APIResponse, NSError>) -> Void) -> APISubscriptionProtocol {
+    internal func performRequest(_ request: URLRequest, completion: @escaping (Result<APIResponse, NSError>) -> Void) -> APISubscriptionProtocol {
         
         var subscription: APISubscriptionProtocol!
         

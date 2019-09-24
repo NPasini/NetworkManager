@@ -23,11 +23,17 @@ private extension QualityOfService {
 }
 
 open class APIPerformer {
-    private let requestBuilder: APIRequestBuilder = APIRequestBuilder()
-    private let requestPerformerFactory: APIRequestPerformerFactoryProtocol = APIRequestPerformerFactory.shared
+    private let requestBuilder: APIRequestBuilder
+    private var memorizedDispatchQueues: [QualityOfService: DispatchQueue]
+    private let requestPerformerFactory: APIRequestPerformerFactoryProtocol
     
-    private var memorizedDispatchQueues: [QualityOfService: DispatchQueue] = [:]
+    public init() {
+        memorizedDispatchQueues = [:]
+        requestBuilder = APIRequestBuilder()
+        requestPerformerFactory = APIRequestPerformerFactory.shared
+    }
     
+    //MARK: Private Functions
     private func dispatchQueueForQoS(_ QoS: QualityOfService) -> DispatchQueue {
         lock()
         
@@ -133,6 +139,15 @@ open class APIPerformer {
         }
     }
     
+    private func lock() {
+        objc_sync_enter(self)
+    }
+    
+    private func unlock() {
+        objc_sync_exit(self)
+    }
+    
+    //MARK: Public Functions
     public func performApi<T: CustomDecodable>(_ request: APIRequest<T>, QoS: QualityOfService, completionQueue: DispatchQueue = DispatchQueue.main, completion: @escaping (Result<T, NSError>) -> Void) -> APISubscriptionProtocol {
         
         return performWrappedApi(request, QoS: QoS, completionQueue: completionQueue) { (result: Result<APIResponseWrapper<T>, NSError>) in
@@ -144,13 +159,5 @@ open class APIPerformer {
                 completion(Result.success(w.object))
             }
         }
-    }
-    
-    private func lock() {
-        objc_sync_enter(self)
-    }
-    
-    private func unlock() {
-        objc_sync_exit(self)
     }
 }

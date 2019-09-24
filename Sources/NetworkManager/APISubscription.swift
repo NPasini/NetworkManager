@@ -8,11 +8,11 @@
 import Foundation
 import ReactiveSwift
 
-class APISubscription: APISubscriptionProtocol {
+internal class APISubscription: APISubscriptionProtocol {
     private let disposable: AnyDisposable
     private let dataTask: URLSessionDataTask
     
-    init(task: URLSessionDataTask){
+    internal init(task: URLSessionDataTask){
         self.disposable = AnyDisposable{
             task.cancel()
         }
@@ -20,15 +20,15 @@ class APISubscription: APISubscriptionProtocol {
         self.dataTask = task
     }
     
-    func start(){
+    internal func start(){
         self.dataTask.resume()
     }
     
-    func dispose() {
+    internal func dispose() {
         disposable.dispose()
     }
     
-    var isDisposed: Bool {
+    internal var isDisposed: Bool {
         get {
             return disposable.isDisposed
         }

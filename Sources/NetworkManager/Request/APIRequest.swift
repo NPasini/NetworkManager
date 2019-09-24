@@ -23,7 +23,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
         }
     }
     
-    init(host: String,
+    public init(host: String,
          path: String,
          version: String,
          method: HTTPMethod,
@@ -70,7 +70,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
 }
 
 open class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
-    init(host: String,
+    public init(host: String,
          path: String,
          version: String,
          timeout: TimeInterval? = nil,

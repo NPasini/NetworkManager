@@ -8,7 +8,7 @@
 import OSLogger
 import Foundation
 
-class DispatchWorkItemSubscription: APISubscriptionProtocol {
+internal class DispatchWorkItemSubscription: APISubscriptionProtocol {
     private let item: DispatchWorkItem
     
     deinit {
@@ -17,16 +17,16 @@ class DispatchWorkItemSubscription: APISubscriptionProtocol {
         }
     }
     
-    init(item: DispatchWorkItem) {
+    internal init(item: DispatchWorkItem) {
         self.item = item
     }
     
-    func dispose() {
+    internal func dispose() {
         OSLogger.networkLog(message: "disposing \(self)", access: .public, type: .debug)
         self.item.cancel()
     }
     
-    var isDisposed: Bool {
+    internal var isDisposed: Bool {
         get {
             return self.item.isCancelled
         }

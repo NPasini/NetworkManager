@@ -7,8 +7,8 @@
 
 import Foundation
 
-class APIRequestPerformerFactory: APIRequestPerformerFactoryProtocol {
-    static let shared = APIRequestPerformerFactory()
+internal class APIRequestPerformerFactory: APIRequestPerformerFactoryProtocol {
+    internal static let shared = APIRequestPerformerFactory()
     
     private var requestPerformerMemorizer: [QualityOfService: APIRequestPerformerProtocol]
     
@@ -16,7 +16,7 @@ class APIRequestPerformerFactory: APIRequestPerformerFactoryProtocol {
         requestPerformerMemorizer = [:]
     }
     
-    func requestPerformerForQoS(_ QoS: QualityOfService) -> APIRequestPerformerProtocol {
+    internal func requestPerformerForQoS(_ QoS: QualityOfService) -> APIRequestPerformerProtocol {
         lock()
         
         defer{
