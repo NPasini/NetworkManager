@@ -10,7 +10,7 @@ import Foundation
 private let NetworkManagerDomain: String = "package.networkManager"
 
 public class NetworkError: NSError {
-    public onvenience init(errorType: ErrorType) {
+    public convenience init(errorType: ErrorType) {
         self.init(domain: NetworkManagerDomain, code: errorType.rawValue, userInfo: [NSLocalizedDescriptionKey : String(describing: errorType)])
     }
 }
