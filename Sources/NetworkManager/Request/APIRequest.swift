@@ -8,16 +8,16 @@
 import Foundation
 
 open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
-    let host: String
-    let path: String
-    let version: String
-    let method: HTTPMethod
-    let timeout: TimeInterval?
-    let headerParameters: HTTPHeaders?
-    let bodyParameters: HTTPBodyParameters?
-    let queryParameters: HTTPQueryParameters?
+    public let host: String
+    public let path: String
+    public let version: String
+    public let method: HTTPMethod
+    public let timeout: TimeInterval?
+    public let headerParameters: HTTPHeaders?
+    public let bodyParameters: HTTPBodyParameters?
+    public let queryParameters: HTTPQueryParameters?
     
-    var body: Data? {
+    public var body: Data? {
         get {
             return nil
         }
