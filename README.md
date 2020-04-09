@@ -47,8 +47,9 @@ class YourRequest: GetRequest<YourResponse> {
     init() {
         let host = "yourhost.com"
         let path = "/path"
+        let version = "/1"
         
-        super.init(host: host, path: path)
+        super.init(host: host, path: path, version: version)
     }
 }
 ```
@@ -56,7 +57,7 @@ class YourRequest: GetRequest<YourResponse> {
 Finally you have to use the APIPerformer to connect to the endpoint:
 
 ```swift
-let subscriptionToEndpoint: SignalProducer<Result<YourResponse, NSError>> = SignalProducer {
+let subscriptionToEndpoint: SignalProducer<Result<YourResponse, NSError>, NSError> = SignalProducer {
             (observer, lifetime) in
             
             let subscription = APIPerformer.shared.performApi(YourRequest(), QoS: .default, completionQueue: .global(qos: .userInteractive)) { (result: Result<YourResponse, NSError>) in
