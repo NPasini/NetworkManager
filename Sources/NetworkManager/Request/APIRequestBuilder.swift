@@ -10,7 +10,9 @@ import Foundation
 internal class APIRequestBuilder: APIRequestBuilderProtocol {
     //MARK: Internal Functions
     internal func requestFrom(_ requestable: Requestable) -> URLRequest? {
-        let urlString: String = "https://\(requestable.host)\(requestable.version)\(requestable.path)"
+        let components: [String] = [requestable.host, requestable.version ?? "", requestable.path]
+
+        let urlString: String = "https://" + components.joined(separator: "/")
         
         guard let url: URL = URL(string: urlString) else {
             return nil

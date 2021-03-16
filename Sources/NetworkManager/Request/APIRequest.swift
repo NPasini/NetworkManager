@@ -10,7 +10,7 @@ import Foundation
 open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
     public let host: String
     public let path: String
-    public let version: String
+    public let version: String?
     public let method: HTTPMethod
     public let timeout: TimeInterval?
     public let headerParameters: HTTPHeaders?
@@ -25,7 +25,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
     
     public init(host: String,
          path: String,
-         version: String,
+         version: String?,
          method: HTTPMethod,
          timeout: TimeInterval? = nil,
          headerParameters: HTTPHeaders? = nil,
@@ -72,7 +72,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
 open class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
     public init(host: String,
          path: String,
-         version: String,
+         version: String?,
          timeout: TimeInterval? = nil,
          headerParameters: HTTPHeaders? = nil,
          bodyParameters: HTTPBodyParameters? = nil,
