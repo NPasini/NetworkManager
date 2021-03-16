@@ -72,7 +72,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
 open class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
     public init(host: String,
          path: String,
-         version: String?,
+         version: String? = nil,
          timeout: TimeInterval? = nil,
          headerParameters: HTTPHeaders? = nil,
          bodyParameters: HTTPBodyParameters? = nil,
