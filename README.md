@@ -46,8 +46,8 @@ Then you have to create your request:
 class YourRequest: GetRequest<YourResponse> {
     init() {
         let host = "yourhost.com"
-        let path = "/path"
-        let version = "/1"
+        let path = "path"
+        let version = "1"
         
         super.init(host: host, path: path, version: version)
     }
