@@ -12,7 +12,9 @@ internal class APIRequestBuilder: APIRequestBuilderProtocol {
     internal func requestFrom(_ requestable: Requestable) -> URLRequest? {
         let components: [String] = [requestable.host, requestable.version, requestable.path].compactMap({ $0 })
 
-        let urlString: String = "https://" + components.joined(separator: "/")
+        let schema = requestable.isHttp ? "http" : "https"
+
+        let urlString: String = schema + "://" + components.joined(separator: "/")
         
         guard let url: URL = URL(string: urlString) else {
             return nil
