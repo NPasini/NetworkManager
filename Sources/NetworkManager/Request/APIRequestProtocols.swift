@@ -11,6 +11,7 @@ internal protocol Requestable {
     var body: Data? { get }
     var host: String { get }
     var path: String { get }
+    var isHttp: Bool { get }
     var version: String? { get }
     var method: HTTPMethod { get }
     var timeout: TimeInterval? { get }

@@ -8,8 +8,10 @@
 import Foundation
 
 open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomDecodable {
+
     public let host: String
     public let path: String
+    public let isHttp: Bool
     public let version: String?
     public let method: HTTPMethod
     public let timeout: TimeInterval?
@@ -27,6 +29,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
          path: String,
          version: String?,
          method: HTTPMethod,
+         isHttp: Bool = false,
          timeout: TimeInterval? = nil,
          headerParameters: HTTPHeaders? = nil,
          bodyParameters: HTTPBodyParameters? = nil,
@@ -34,6 +37,7 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
         
         self.host = host
         self.path = path
+        self.isHttp = isHttp
         self.method = method
         self.version = version
         self.timeout = timeout
@@ -72,12 +76,13 @@ open class APIRequest<T>: Requestable, Validatable, Processable where T: CustomD
 open class GetRequest<T>: APIRequest<T> where T: CustomDecodable {
     public init(host: String,
          path: String,
+         isHttp: Bool = false,
          version: String? = nil,
          timeout: TimeInterval? = nil,
          headerParameters: HTTPHeaders? = nil,
          bodyParameters: HTTPBodyParameters? = nil,
          queryParameters: HTTPQueryParameters? = nil) {
         
-        super.init(host: host, path: path, version: version, method: HTTPMethod.get, timeout: timeout, headerParameters: headerParameters, bodyParameters: bodyParameters, queryParameters: queryParameters)
+        super.init(host: host, path: path, version: version, method: HTTPMethod.get, isHttp: isHttp, timeout: timeout, headerParameters: headerParameters, bodyParameters: bodyParameters, queryParameters: queryParameters)
     }
 }
