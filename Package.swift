@@ -15,14 +15,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ReactiveCocoa/ReactiveSwift.git", from: "6.0.0"),
-        .package(url: "https://github.com/NPasini/OSLogger.git", from: "1.0.0"),
+        .package(url: "https://github.com/NPasini/OSLogger.git", from: "2.0.0"),
     ],
     targets: [
         .target(
             name: "NetworkManager",
-            dependencies: ["ReactiveSwift", "OSLogger"]),
-        .testTarget(
-            name: "NetworkManagerTests",
-            dependencies: ["NetworkManager"]),
+            dependencies: ["ReactiveSwift", "Logger"]),
+        .target(
+            name: "Logger",
+            dependencies: ["OSLogger"]),
     ]
 )

@@ -5,7 +5,7 @@
 //  Created by Pasini, Nicolò on 18/09/2019.
 //
 
-import OSLogger
+import Logger
 import Foundation
 
 internal class DispatchWorkItemSubscription: APISubscriptionProtocol {
@@ -22,7 +22,7 @@ internal class DispatchWorkItemSubscription: APISubscriptionProtocol {
     }
     
     internal func dispose() {
-        OSLogger.networkLog(message: "disposing \(self)", access: .public, type: .debug)
+        NetworkLogger.debugLog(message: "disposing \(self)", access: .public)
         self.item.cancel()
     }
     
