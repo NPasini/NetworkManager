@@ -5,7 +5,7 @@
 //  Created by Pasini, Nicolò on 18/09/2019.
 //
 
-import OSLogger
+import Logger
 import Foundation
 import ReactiveSwift
 
@@ -24,8 +24,9 @@ private extension QualityOfService {
 
 open class APIPerformer {
     public static let shared = APIPerformer()
-    
+
     private let requestBuilder: APIRequestBuilder
+    private let dispatchQueueRetrieverSemaphore: DispatchSemaphore
     private var memorizedDispatchQueues: [QualityOfService: DispatchQueue]
     private let requestPerformerFactory: APIRequestPerformerFactoryProtocol
     
@@ -33,25 +34,27 @@ open class APIPerformer {
         memorizedDispatchQueues = [:]
         requestBuilder = APIRequestBuilder()
         requestPerformerFactory = APIRequestPerformerFactory.shared
+        dispatchQueueRetrieverSemaphore = DispatchSemaphore(value: 1)
     }
     
-    //MARK: Private Functions
+    //MARK: - Private Functions
     private func dispatchQueueForQoS(_ QoS: QualityOfService) -> DispatchQueue {
-        lock()
-        
-        defer{
-            unlock()
-        }
-        
+
+        var dispatcQueue: DispatchQueue
+
+        dispatchQueueRetrieverSemaphore.wait()
+
         if let queue = self.memorizedDispatchQueues[QoS] {
-            return queue
+            dispatcQueue = queue
+        } else {
+            let newQueue = DispatchQueue(label: "APIPerformer.\(QoS.dispatchQualityOfService.qosClass).queue", qos: QoS.dispatchQualityOfService, attributes: .concurrent)
+            self.memorizedDispatchQueues[QoS] = newQueue
+            dispatcQueue = newQueue
         }
-        
-        let newQueue = DispatchQueue(label: "APIPerformer.\(QoS.dispatchQualityOfService.qosClass).queue", qos: QoS.dispatchQualityOfService, attributes: .concurrent)
-        
-        self.memorizedDispatchQueues[QoS] = newQueue
-        
-        return newQueue
+
+        dispatchQueueRetrieverSemaphore.signal()
+
+        return dispatcQueue
     }
     
     private func connectTo<T: Decodable>(_ endpoint: APIRequest<T>, QoS: QualityOfService, completion: @escaping (Result<(Data, Int), NSError>) -> Void) -> APISubscriptionProtocol {
@@ -65,38 +68,38 @@ open class APIPerformer {
             let processedRequest = endpoint.processRequest(request)
             
             if let requestEndpoint = processedRequest.url {
-                OSLogger.networkLog(message: "Connecting to endpoint: \(String(describing: requestEndpoint))", access: .public, type: .debug)
+                NetworkLogger.debugLog(message: "Connecting to endpoint: \(String(describing: requestEndpoint))", access: .public)
             }
             
             let _ = self.requestPerformerFactory.requestPerformerForQoS(QoS).performRequest(processedRequest) { (result: Result<APIResponse, NSError>) in
                 
                 switch result {
                 case .failure(let error):
-                    OSLogger.networkLog(message: "Error: \(error)", access: .public, type: .error)
+                    NetworkLogger.errorLog(message: "Error: \(error)", access: .public)
                     
                     completion(Result.failure(error))
                 case .success(let response):
                     guard let httpResponse = response.response as? HTTPURLResponse else {
-                        OSLogger.networkLog(message: "Unknown error in response", access: .public, type: .error)
+                        NetworkLogger.errorLog(message: "Unknown error in response", access: .public)
                         completion(Result.failure(NetworkError(errorType: .unknownError)))
                         return
                     }
                     
                     if let validationError: NSError = endpoint.validateResponse(httpResponse) {
-                        OSLogger.networkLog(message: "Response validation error", access: .public, type: .error)
+                        NetworkLogger.errorLog(message: "Response validation error", access: .public)
                         completion(Result.failure(validationError))
                         return
                     }
                     
                     guard let data: Data = response.data else {
-                        OSLogger.networkLog(message: "Missing data in response error", access: .public, type: .error)
+                        NetworkLogger.errorLog(message: "Missing data in response error", access: .public)
                         completion(Result.failure(NetworkError(errorType: .missingData)))
                         return
                     }
                     
                     let statusCode = httpResponse.statusCode
                     
-                    OSLogger.networkLog(message: "Valid response received with status code \(statusCode)", access: .public, type: .debug)
+                    NetworkLogger.debugLog(message: "Valid response received with status code \(statusCode)", access: .public)
                     completion(Result.success((data, statusCode)))
                     return
                 }
@@ -114,7 +117,7 @@ open class APIPerformer {
             case .success(let tuple):
                 guard let obj: T = T.decode(tuple.0) as? T else {
                     completionQueue.async {
-                        OSLogger.networkLog(message: "Decoding error", access: .public, type: .error)
+                        NetworkLogger.errorLog(message: "Decoding error", access: .public)
                         completion(Result.failure(NetworkError(errorType: .parserError)))
                     }
                     return
@@ -122,7 +125,7 @@ open class APIPerformer {
                 
                 if let error = request.validateResponseObject(obj) {
                     completionQueue.async {
-                        OSLogger.networkLog(message: "Response object validation error", access: .public, type: .error)
+                        NetworkLogger.errorLog(message: "Response object validation error", access: .public)
                         completion(Result.failure(error))
                     }
                     return
@@ -141,15 +144,7 @@ open class APIPerformer {
         }
     }
     
-    private func lock() {
-        objc_sync_enter(self)
-    }
-    
-    private func unlock() {
-        objc_sync_exit(self)
-    }
-    
-    //MARK: Public Functions
+    //MARK: - Public Functions
     public func performApi<T: CustomDecodable>(_ request: APIRequest<T>, QoS: QualityOfService, completionQueue: DispatchQueue = DispatchQueue.main, completion: @escaping (Result<T, NSError>) -> Void) -> APISubscriptionProtocol {
         
         return performWrappedApi(request, QoS: QoS, completionQueue: completionQueue) { (result: Result<APIResponseWrapper<T>, NSError>) in
